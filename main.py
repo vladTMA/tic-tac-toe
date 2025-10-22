@@ -50,7 +50,7 @@ class Tooltip:
     def show(self, event=None):
         if self.tip or not self.text:
             return
-        # Используем координаты события для позиционирования тултипа
+        # Используем координаты события для позиционирования всплывающего виджета
         x = event.x_root + 10
         y = event.y_root + 10
         self.tip = tk.Toplevel(self.widget)
