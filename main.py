@@ -235,17 +235,31 @@ def on_clic(row, col):
         fg="blue" if current_player == "X" else "red"
     )
 
+
+    def animate_win(cells):
+        """Анимация победной линии — мигает цветом"""
+        def blink(count):
+            color = "#90ee90" if count % 2 == 0 else "#f0f0f0"
+            for r, c in cells:
+                buttons[r][c].config(bg=color)
+            if count < 6:
+                window.after(200, lambda: blink(count + 1))
+
+        blink(0)
+
     # Проверяем на выигрыш
-    winner = check_winner()
-    if winner:
+    winning_cells = check_winner()
+    if winning_cells:
+        symbol = buttons[winning_cells[0][0]][winning_cells[0][1].cget("text")]
         # Обновляем счет
-        if winner == player_symbol.get():
+        if symbol == player_symbol.get():
             player_score += 1
         else:
             opponent_score += 1
         update_score_label(score_label)
 
-        messagebox.showinfo("Игра завершена", f"Игрок {winner} победил!")
+        animate_win(winning_cells)
+        messagebox.showinfo("Игра завершена", f"Игрок {symbol} победил!")
         games_played += 1
         handle_round_end(score_label)
         reset_board(score_label)
@@ -258,6 +272,7 @@ def on_clic(row, col):
         handle_round_end(score_label)
         reset_board(score_label)
         return
+
 
     # Переключаем игрока
     current_player = opponent_symbol if current_player == player_symbol.get() else player_symbol.get()
